@@ -1,41 +1,72 @@
-<%@page import="com.example.dto.CartItem"%>
-<%@page import="java.util.List"%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<%@ page import="java.util.List"%>
+<%@ page import="com.example.dto.Order"%>
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+
+<!DOCTYPE html>
+<html lang="en">
     <head>
-        <title>Order Details</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>All Orders</title>
+        <style>
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            table, th, td {
+                border: 1px solid black;
+            }
+            th, td {
+                padding: 10px;
+                text-align: left;
+            }
+        </style>
     </head>
     <body>
-        <h1>Order Details</h1>
+        <h2>All Orders</h2>
 
-        <p><strong>Order ID:</strong> <%= request.getAttribute("order").getOrderID()%></p>
-        <p><strong>User ID:</strong> <%= request.getAttribute("order").getUserID()%></p>
-        <p><strong>Order Date:</strong> <%= request.getAttribute("order").getOrderDate()%></p>
-        <p><strong>Total Amount:</strong> <%= request.getAttribute("order").getTotalAmount()%></p>
+        <%
+            // Lấy danh sách đơn hàng từ request
+            List<Order> orders = (List<Order>) request.getAttribute("orders");
+            String userID = (String) request.getAttribute("userID");
 
-        <h3>Items in the Order:</h3>
-        <table border="1">
+            if (orders != null && !orders.isEmpty()) {
+        %>
+        <table>
             <thead>
                 <tr>
-                    <th>Food ID</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
+                    <th>Order ID</th>
+                    <th>User ID</th>
+                    <th>Order Date</th>
+                    <th>Total Amount</th>
                 </tr>
             </thead>
             <tbody>
                 <%
-                    List<CartItem> cartItems = (List<CartItem>) request.getAttribute("order").getCartItems();
-                    for (CartItem item : cartItems) {
+                    for (Order order : orders) {
                 %>
                 <tr>
-                    <td><%= item.getFoodID()%></td>
-                    <td><%= item.getQuantity()%></td>
-                    <td><%= item.getPrice()%></td>
+                    <td><%= order.getOrderID()%></td>
+                    <td><%= order.getUserID()%></td>
+                    <td><%= order.getOrderDate()%></td>
+                    <td><%= order.getTotalAmount()%></td>
                 </tr>
                 <%
                     }
                 %>
             </tbody>
         </table>
+        <%
+        } else {
+        %>
+        <p>No orders found.</p>
+        <%
+            }
+        %>
+
+        <br>
+        <!-- Truyền userID vào link -->
+        <a href="views/login.jsp">Back to Login</a>
+
     </body>
 </html>

@@ -10,33 +10,26 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 
-public class CartDAO
-{
+public class CartDAO {
 
     private final Connection conn;
 
-    public CartDAO(Connection conn)
-    {
+    public CartDAO(Connection conn) {
         this.conn = conn;
     }
 
-    public List<CartItem> getCartItems(HttpSession session) throws SQLException
-    {
+    public List<CartItem> getCartItems(HttpSession session) throws SQLException {
         List<CartItem> cartItems = new ArrayList<>();
         String userId = (String) session.getAttribute("userID");
 
-        if (userId == null)
-        {
+        if (userId == null) {
             return cartItems;
         }
 
-        try (PreparedStatement ps = conn.prepareStatement(Queries.GET_CART_ITEMS))
-        {
+        try (PreparedStatement ps = conn.prepareStatement(Queries.GET_CART_ITEMS)) {
             ps.setString(1, userId);
-            try (ResultSet rs = ps.executeQuery())
-            {
-                while (rs.next())
-                {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
                     CartItem item = new CartItem();
                     item.setFoodID(rs.getString("foodID"));
                     item.setName(rs.getString("foodName"));
@@ -50,16 +43,13 @@ public class CartDAO
         return cartItems;
     }
 
-    public void addToCart(HttpSession session, String foodID, int quantity) throws SQLException
-    {
+    public void addToCart(HttpSession session, String foodID, int quantity) throws SQLException {
         String userId = (String) session.getAttribute("userID");
-        if (userId == null)
-        {
+        if (userId == null) {
             throw new IllegalStateException("User must be logged in to add items to the cart.");
         }
 
-        try (PreparedStatement ps = conn.prepareStatement(Queries.ADD_TO_CART))
-        {
+        try (PreparedStatement ps = conn.prepareStatement(Queries.ADD_TO_CART)) {
             ps.setString(1, userId);
             ps.setString(2, foodID);
             ps.setInt(3, quantity);
@@ -68,16 +58,13 @@ public class CartDAO
         }
     }
 
-    public void updateCart(HttpSession session, String foodID, int quantity) throws SQLException
-    {
+    public void updateCart(HttpSession session, String foodID, int quantity) throws SQLException {
         String userId = (String) session.getAttribute("userID");
-        if (userId == null)
-        {
+        if (userId == null) {
             throw new IllegalStateException("User must be logged in to update cart items.");
         }
 
-        try (PreparedStatement ps = conn.prepareStatement(Queries.UPDATE_CART))
-        {
+        try (PreparedStatement ps = conn.prepareStatement(Queries.UPDATE_CART)) {
             ps.setInt(1, quantity);
             ps.setString(2, userId);
             ps.setString(3, foodID);
@@ -85,20 +72,33 @@ public class CartDAO
         }
     }
 
-    public void removeFromCart(HttpSession session, String foodID) throws SQLException
-    {
+    public void removeFromCart(HttpSession session, String foodID) throws SQLException {
         String userId = (String) session.getAttribute("userID");
-        if (userId == null)
-        {
+        if (userId == null) {
             throw new IllegalStateException("User must be logged in to remove items from the cart.");
         }
 
-        try (PreparedStatement ps = conn.prepareStatement(Queries.REMOVE_FROM_CART))
-        {
+        try (PreparedStatement ps = conn.prepareStatement(Queries.REMOVE_FROM_CART)) {
             ps.setString(1, userId);
             ps.setString(2, foodID);
             ps.executeUpdate();
         }
     }
 
+    public void clearCart(HttpSession session) throws SQLException {
+        // Lấy userID từ session
+        String userID = (String) session.getAttribute("userID");
+
+        if (userID == null) {
+            throw new SQLException("User is not logged in.");
+        }
+
+        // Xóa tất cả các mục trong giỏ hàng của người dùng từ bảng tblCart
+        String deleteCartQuery = "DELETE FROM tblCart WHERE userID = ?";
+
+        try (PreparedStatement deleteStmt = conn.prepareStatement(deleteCartQuery)) {
+            deleteStmt.setString(1, userID);
+            deleteStmt.executeUpdate();
+        }
+    }
 }

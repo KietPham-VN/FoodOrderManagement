@@ -29,10 +29,8 @@
                 <tbody>
                     <%
                         List<FoodItem> foodItems = (List<FoodItem>) request.getAttribute("FoodItems");
-                        if (foodItems != null && !foodItems.isEmpty())
-                        {
-                            for (FoodItem food : foodItems)
-                            {
+                        if (foodItems != null && !foodItems.isEmpty()) {
+                            for (FoodItem food : foodItems) {
                     %>
                     <tr>
                         <td><%= food.getFoodName()%></td>
@@ -48,8 +46,7 @@
                     </tr>
                     <%
                         }
-                    } else
-                    {
+                    } else {
                     %>
                     <tr>
                         <td colspan="4">No products available</td>
@@ -60,5 +57,7 @@
                 </tbody>
             </table>
         </div>
+        <a href="views/login.jsp">Back to Login</a>
+
     </body>
 </html>

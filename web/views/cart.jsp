@@ -16,11 +16,9 @@
             <h2>Your Cart</h2>
 
             <!-- Hiển thị lỗi nếu có -->
-            <div class="alert alert-danger" style="display: <% if (request.getAttribute("ERROR") != null)
-                {
+            <div class="alert alert-danger" style="display: <% if (request.getAttribute("ERROR") != null) {
                     out.print("block");
-                } else
-                {
+                } else {
                     out.print("none");
                 }%>;">
                 <%= request.getAttribute("ERROR") != null ? request.getAttribute("ERROR") : ""%>
@@ -41,10 +39,8 @@
                     <%
                         List<CartItem> cartItems = (List<CartItem>) request.getAttribute("cartItems");
                         double totalPrice = 0.0;
-                        if (cartItems != null && !cartItems.isEmpty())
-                        {
-                            for (CartItem item : cartItems)
-                            {
+                        if (cartItems != null && !cartItems.isEmpty()) {
+                            for (CartItem item : cartItems) {
                                 double itemTotal = item.getQuantity() * item.getPrice();
                                 totalPrice += itemTotal;
                     %>
@@ -68,8 +64,7 @@
                     </tr>
                     <%
                         }
-                    } else
-                    {
+                    } else {
                     %>
                     <tr>
                         <td colspan="5">No items in your cart</td>
@@ -87,7 +82,12 @@
             <form method="GET" action="CartController">
                 <button type="submit" name="action" value="Checkout" class="btn btn-primary">Proceed to Checkout</button>
             </form>
+            <!-- Nút Place Order -->
+            <form method="POST" action="CartController">
+                <button type="submit" name="action" value="PlaceOrder" class="btn btn-primary">Place Order</button>
+            </form>
         </div>
+        <a href="views/login.jsp">Back to Login</a>
 
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>

@@ -29,11 +29,10 @@
             <%
                 // Lấy danh sách món ăn từ request
                 List<FoodItem> foodItems = (List<FoodItem>) request.getAttribute("foodItems");
-                if (foodItems != null && !foodItems.isEmpty())
-                {
+                if (foodItems != null && !foodItems.isEmpty()) {
             %>       
             <a href="FoodController?action=CreateFood" class="btn btn-success float-right mb-3">Create FoodItem</a>
-
+            <a href="OrderController?action=viewOrders" class="btn btn-primary float-right mb-3">Manage Orders</a>
             <table class="table table-bordered table-striped">
                 <thead class="thead-dark">
                     <tr>
@@ -49,8 +48,7 @@
                 <tbody>
                     <%
                         int count = 0;
-                        for (FoodItem foodItem : foodItems)
-                        {
+                        for (FoodItem foodItem : foodItems) {
                     %>
                     <tr>
                         <td><%= (++count)%></td>
@@ -76,8 +74,7 @@
             </table>
             <h5>Number of food items found: <%= foodItems.size()%></h5>
             <%
-            } else
-            {
+            } else {
             %>
             <h3>No food items found.</h3>
             <%
